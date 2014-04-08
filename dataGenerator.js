@@ -1,15 +1,11 @@
 var Faker = require('./Faker');
 var mysql   = require('mysql'),
     mysqlConnection = mysql.createConnection({
-        host     : '206.253.166.168',
-        user     : 'remoteKaam',
-        password : 'KAAMsuperSecretPassWord',
-        database : 'kaam'
+        host     : settings.db.host,
+        user     : settings.db.user,
+        password : settings.db.password,
+        database : settings.db.database
     });
-
-mysqlConnection.connect(function(err) {
-  // connected! (unless `err` is set)
-});
 
 
 var _insertToDatabase = function(row) {
