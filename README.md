@@ -12,6 +12,7 @@ npm install
 ```
 
 * Set up the settings file
+* Rename the settings-example.js file to settings.js
 
 * Run the program
 ```
