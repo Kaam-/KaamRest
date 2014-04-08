@@ -37,6 +37,20 @@ var _insertToGoalsTable = function(row, queryNumber, callback){
       });
 };
 
+var _insertToTaskTable = function(row, queryNumber, callback){
+    var sql = "INSERT INTO Tasks (fkUser, fkGoal, fkParentTask, recurringTask, DateCreated, DateCompleted, Name, LastUpdated) VALUES ('" + row.fkUser + "', '" +
+    row.fkGoal + "', '" + row.fkParentTask + "', '" + row.recurringTask + "', '" + row.DateCreated + "', '" + row.DateCompleted + "', '" + row.Name + "', '" + row.LastUpdated + "')";
+    mysqlConnection.query(sql, function(err, result){
+      if(err) {
+       console.log("error", err);
+       } else {
+           console.log("result", result);
+           callback(queryNumber);
+       }
+
+    });
+};
+
 var DataRowConstructor = function() {
     return {
         FirstName : null,
@@ -46,7 +60,7 @@ var DataRowConstructor = function() {
         Password : null,
         Email : null,
         DateCreated : null,
-        LastUpdated : null,
+        LastUpdated : null
     };
 };
 
@@ -66,6 +80,19 @@ var GoalRowConstructor = function(){
         NumOfEvents : null,
         LastUpdated : null
     };
+};
+
+var TaskRowConstructor = function(){
+  return {
+      fkUser : null,
+      fkGoal : null,
+      fkParenttask : null,
+      recurringTask : null,
+      DateCreated : null,
+      DateCompleted : null,
+      Name : null,
+      LastUpdated: null
+  };
 };
 
 var _generateRandomDateTime = function() {
@@ -127,13 +154,33 @@ var _createGoals = function() {
         row.Stars = _getRandomNumber(1, 10);
         row.NumOfEvents = _getRandomNumber(1, 5);
         row.LastUpdated = _generateRandomDateTime();
-        _insertToGoalsTable(row, i , function(queryNumber){
+        /*_insertToGoalsTable(row, i , function(queryNumber){
             if(queryNumber >= 499){
+                process.exit();
+            }
+        });*/
+    }
+};
+
+var _createTasks = function(){
+    for(var i = 0; i < 900; i++){
+        var row = new TaskRowConstructor();
+        row.fkUser = _getRandomNumber(0, 300);
+        row.fkGoal = _getRandomNumber(0, 500);
+        row.fkParenttask = _getRandomNumber(0, 300);
+        row.recurringTask = _getRandomNumber(0, 1);
+        row.DateCreated = _generateRandomDateTime();
+        row.DateCompleted = _generateRandomDateTime();
+        row.Name = Faker.Lorem.sentence();
+        row.LastUpdated = _generateRandomDateTime();
+        _insertToTaskTable(row, i , function(queryNumber){
+            if(queryNumber >= 900){
                 process.exit();
             }
         });
     }
 };
 
-_updateDB();
-_createGoals();
+//_updateDB();
+//_createGoals();
+_createTasks();
