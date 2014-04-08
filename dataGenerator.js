@@ -1,5 +1,6 @@
 var Faker = require('./Faker');
 var mysql   = require('mysql'),
+    settings = require('./settings/settings')
     mysqlConnection = mysql.createConnection({
         host     : settings.db.host,
         user     : settings.db.user,
