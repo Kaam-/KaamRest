@@ -1,10 +1,15 @@
 var express = require('express'),
     app     = express(),
     usersConstructor = require('./routes/user'),
-    users  = new usersConstructor();
+    users  = new usersConstructor(),
+    goalsConstructor = require('./routes/goal'),
+    goals = new goalsConstructor();
 
-app.get('/users', users.getAll);
-app.get('/users/:id', users.getById);
+app.get('/get/user/all', users.getAll);
+app.get('/get/user/:id', users.getById);
+
+app.get('/get/goal/user/:id', goals.getAllGoalsForUser);
+app.get('/get/goal/goal/:id', goals.getById);
 
 
 app.listen(3000);

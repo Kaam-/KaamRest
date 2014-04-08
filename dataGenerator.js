@@ -22,6 +22,21 @@ var _insertToDatabase = function(row, queryNumber, callback) {
     });
 };
 
+var _insertToGoalsTable = function(row, queryNumber, callback){
+    var sql = "INSERT INTO Goals (fkUser, Name, DateCreated, EndDate, DateCompleted, GroupGoal, EventOrTime, NumOfSubTasks, CompletedTasks, IncompleteTasks, Stars, NumOfEvents, LastUpdated) VALUES ('"
+       + row.fkUser + "', '" + row.Name + "', '" + row.DateCreated + "', '" + row.EndDate + "', '" + row.DateCompleted + "', '" + row.GroupGoal + "', '"
+      + row.EventOrTime + "', '" + row.NumOfSubTasks + "', '" + row.CompletedTasks + "', '" + row.IncompleteTasks + "', '" + row.Stars + "', '" + row.NumOfEvents + "', '" + row.LastUpdated + "')";
+      mysqlConnection.query(sql, function(err, result) {
+         if(err) {
+          console.log("error", err);
+          } else {
+              console.log("result", result);
+              callback(queryNumber);
+          }
+
+      });
+};
+
 var DataRowConstructor = function() {
     return {
         FirstName : null,
@@ -32,6 +47,24 @@ var DataRowConstructor = function() {
         Email : null,
         DateCreated : null,
         LastUpdated : null,
+    };
+};
+
+var GoalRowConstructor = function(){
+    return {
+        fkUser : null,
+        Name : null,
+        DateCreated : null,
+        EndDate : null,
+        DateCompleted : null,
+        GroupGoal : null,
+        EventOrTime : null,
+        NumOfSubTasks : null,
+        CompletedTasks : null,
+        IncompleteTasks : null,
+        Stars : null,
+        NumOfEvents : null,
+        LastUpdated : null
     };
 };
 
@@ -58,7 +91,7 @@ var _getRandomNumber = function(start, end) {
 
 var _updateDB = function() {
 
-    for (var i = 0; i < 30; i++) {
+    for (var i = 0; i < 300; i++) {
         var row = new DataRowConstructor();
         row.FirstName = Faker.Name.firstName();
         row.LastName = Faker.Name.lastName();
@@ -68,14 +101,39 @@ var _updateDB = function() {
         row.Email = Faker.Internet.email();
         row.DateCreated = _generateRandomDateTime();
         row.LastUpdated = _generateRandomDateTime();
-        _insertToDatabase(row, i, function(queryNumber) {
-            if(queryNumber >= 29) {
+        /*_insertToDatabase(row, i, function(queryNumber) {
+            if(queryNumber >= 299) {
                 process.exit();
             }
-        });
+        });*/
 
     }
 
 };
 
+var _createGoals = function() {
+    for(var i = 0; i < 500; i++){
+        var row = new GoalRowConstructor();
+        row.fkUser = _getRandomNumber(0, 300);
+        row.Name = Faker.Lorem.words();
+        row.DateCreated = _generateRandomDateTime();
+        row.EndDate = _generateRandomDateTime();
+        row.DateCompleted = _generateRandomDateTime();
+        row.GroupGoal = _getRandomNumber(0, 1);
+        row.EventOrTime = _getRandomNumber(0, 1);
+        row.NumOfSubTasks = _getRandomNumber(1, 15);
+        row.CompletedTasks = _getRandomNumber(1, 10);
+        row.IncompleteTasks = _getRandomNumber(1, 5);
+        row.Stars = _getRandomNumber(1, 10);
+        row.NumOfEvents = _getRandomNumber(1, 5);
+        row.LastUpdated = _generateRandomDateTime();
+        _insertToGoalsTable(row, i , function(queryNumber){
+            if(queryNumber >= 499){
+                process.exit();
+            }
+        });
+    }
+};
+
 _updateDB();
+_createGoals();

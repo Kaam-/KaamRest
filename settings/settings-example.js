@@ -1,7 +1,7 @@
 var settings = {};
 settings.db = {};
-settings.db.user = 'user';
-settings.db.password = 'password';
+settings.db.user = 'root';
+settings.db.password = 'qewSTD3M';
 settings.db.database = 'kaam';
 settings.db.host = 'localhost';
 

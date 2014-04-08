@@ -19,7 +19,10 @@ var User = function() {
     };
 
     self.getById = function(req, res) {
-        res.send({id:req.params.id, name: "The Name", description: "description"});
+        connection.query("select * from Users where pkUser = " + req.params.id, function(err, result){
+            if(err){console.log("Err: " + err);}
+            res.send(result);
+        });
     };
 }
 
