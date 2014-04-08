@@ -4,8 +4,7 @@
   "description": "Rest API for the Kaam App",
   "main": "index.js",
   "scripts": {
-    "start" : "node server.js",
-    "fakeData" : "node dataGenerator.js"
+    "start" : "node server.js"
     },
   "author": "Michael Dunton",
   "dependencies": {

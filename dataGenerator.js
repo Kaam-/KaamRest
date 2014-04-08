@@ -1,6 +1,6 @@
 var Faker = require('./Faker');
 var mysql   = require('mysql'),
-    settings = require('./settings/settings')
+    settings = require('./settings/settings'),
     mysqlConnection = mysql.createConnection({
         host     : settings.db.host,
         user     : settings.db.user,
@@ -10,7 +10,7 @@ var mysql   = require('mysql'),
 
 
 var _insertToDatabase = function(row) {
-    var sql = "INSERT INTO Users (FirstName, LastName, AvatarUrl, Username, Password, Email, DateCreated, LastUpdated) VALUES ('" + row.FirstName + "', '" + row.LastName +"', '"+ row.AvatarUrl +"', '" + row.Username +"', '" + row.Password +"', '" + row.Email +"', '" + row.DateCreated +"', '"+ row.LastUpdate +"')";
+    var sql = "INSERT INTO Users (FirstName, LastName, AvatarUrl, Username, Password, Email, DateCreated, LastUpdated) VALUES ('" + row.FirstName + "', '" + row.LastName +"', '"+ row.AvatarUrl +"', '" + row.Username +"', '" + row.Password +"', '" + row.Email +"', '" + row.DateCreated +"', '"+ row.LastUpdated +"')";
     mysqlConnection.query(sql, function(err, result) {
        if(err) {
         console.log("error", err);
@@ -44,7 +44,11 @@ var _generateRandomDateTime = function() {
     var milliseconds = 0;
 
     var date = new Date(year, month, day, hours, minutes, seconds, milliseconds);
-    return Math.floor(date.getTime()/1000);
+    var myDate_string = date.toISOString();
+    myDate_string = myDate_string.replace("T"," ");
+    myDate_string = myDate_string.substring(0, myDate_string.length - 5);
+
+    return myDate_string;
 };
 
 var _getRandomNumber = function(start, end) {
