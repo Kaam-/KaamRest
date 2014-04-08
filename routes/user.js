@@ -15,15 +15,15 @@ var User = function() {
             if(err) console.log("err", err);
             res.send(result);
         });
-
     };
 
     self.getById = function(req, res) {
-        connection.query("select * from Users where pkUser = " + req.params.id, function(err, result){
-            if(err){console.log("Err: " + err);}
+        var pkUser = req.params.id;
+        connection.query("select * from Users where pkUser = ?", [pkUser], function(err, result){
+            if(err) console.log("Err: " + err);
             res.send(result);
         });
     };
-}
+};
 
 module.exports = User;
