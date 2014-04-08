@@ -12,19 +12,21 @@ var Goal = function(){
   var self = this;
 
   self.getAllGoalsForUser = function (req, res){
-      connection.query("select * from Goals where fkUser = " + req.params.id, function(err, result){
-        if(err){console.log("err: " + err);}
-        res.send(result);
+      var fkUser = req.params.id;
+      connection.query("select * from Goals where fkUser = ?" ,[fkUser], function(err, result){
+          if(err) console.log("Error : " + err);
+          res.send(result);
       });
   };
 
   self.getById = function (req, res){
-      connection.query("select * from Goals where pkGoal = " + req.params.id, function(err, result){
-        if(err){console.log("Err: " + err);}
-        res.send(result);
+      var pkGoal = req.params.id;
+      connection.query("select * from Goals where pkGoal = ?" ,[pkGoal] , function(err, result){
+          if(err) console.log("Error : " + err);
+          res.send(result);
       });
   };
 
-}
+};
 
 module.exports = Goal;
