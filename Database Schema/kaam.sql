@@ -247,8 +247,8 @@ CREATE TABLE `Tasks` (
   PRIMARY KEY (`pkTask`),
   KEY `fkUser` (`fkUser`),
   KEY `fkGoal` (`fkGoal`),
-  KEY `fkParentTask` (`fkParentTask`),
-  CONSTRAINT `Tasks_ibfk_3` FOREIGN KEY (`fkParentTask`) REFERENCES `Tasks` (`pkTask`),
+/*KEY `fkParentTask` (`fkParentTask`),
+  CONSTRAINT `Tasks_ibfk_3` FOREIGN KEY (`fkParentTask`) REFERENCES `Tasks` (`pkTask`),*/
   CONSTRAINT `Tasks_ibfk_1` FOREIGN KEY (`fkUser`) REFERENCES `Users` (`pkUser`),
   CONSTRAINT `Tasks_ibfk_2` FOREIGN KEY (`fkGoal`) REFERENCES `Goals` (`pkGoal`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
