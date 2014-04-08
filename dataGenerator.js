@@ -9,13 +9,14 @@ var mysql   = require('mysql'),
     });
 
 
-var _insertToDatabase = function(row) {
+var _insertToDatabase = function(row, queryNumber, callback) {
     var sql = "INSERT INTO Users (FirstName, LastName, AvatarUrl, Username, Password, Email, DateCreated, LastUpdated) VALUES ('" + row.FirstName + "', '" + row.LastName +"', '"+ row.AvatarUrl +"', '" + row.Username +"', '" + row.Password +"', '" + row.Email +"', '" + row.DateCreated +"', '"+ row.LastUpdated +"')";
     mysqlConnection.query(sql, function(err, result) {
        if(err) {
         console.log("error", err);
         } else {
             console.log("result", result);
+            callback(queryNumber);
         }
 
     });
@@ -45,9 +46,9 @@ var _generateRandomDateTime = function() {
 
     var date = new Date(year, month, day, hours, minutes, seconds, milliseconds);
     var myDate_string = date.toISOString();
+
     myDate_string = myDate_string.replace("T"," ");
     myDate_string = myDate_string.substring(0, myDate_string.length - 5);
-
     return myDate_string;
 };
 
@@ -57,7 +58,7 @@ var _getRandomNumber = function(start, end) {
 
 var _updateDB = function() {
 
-    for (var i = 0; i < 100; i++) {
+    for (var i = 0; i < 30; i++) {
         var row = new DataRowConstructor();
         row.FirstName = Faker.Name.firstName();
         row.LastName = Faker.Name.lastName();
@@ -67,8 +68,12 @@ var _updateDB = function() {
         row.Email = Faker.Internet.email();
         row.DateCreated = _generateRandomDateTime();
         row.LastUpdated = _generateRandomDateTime();
+        _insertToDatabase(row, i, function(queryNumber) {
+            if(queryNumber >= 29) {
+                process.exit();
+            }
+        });
 
-        _insertToDatabase(row);
     }
 
 };
