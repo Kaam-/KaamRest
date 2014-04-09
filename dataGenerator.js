@@ -51,6 +51,18 @@ var _insertToTaskTable = function(row, queryNumber, callback){
     });
 };
 
+var _insertToTrophyTable = function(row){
+    var sql = "INSERT INTO Trophies (Name) VALUES ('" + row.Name + "')";
+    mysqlConnection.query(sql, function(err, result){
+      if(err) {
+       console.log("error", err);
+       } else {
+           console.log("result", result);
+       }
+
+    });
+};
+
 var DataRowConstructor = function() {
     return {
         FirstName : null,
@@ -97,7 +109,6 @@ var TaskRowConstructor = function() {
 
 var TrophyRowConstructor = function() {
     return {
-        pkTrophy : null,
         Name : null,
         TrophyUrl : null
     };
@@ -188,6 +199,17 @@ var _createTasks = function(){
         });
     }
 };
+
+var _createTrophies = function() {
+    for(var i = 0; i < 50; i++) {
+        var row = new TrophyRowConstructor();
+        row.Name = Faker.random.bs_buzz();
+        _insertToTrophyTable(row);
+    }
+
+
+
+}
 
 /*_updateDB();
 _createGoals();

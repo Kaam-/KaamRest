@@ -25,6 +25,13 @@ var Trophies = function() {
             res.send(result);
         });
     };
+
+    self.getAll = function(req, res) {
+        connection.query("select * from Trophies", function(err, result) {
+            if(err) console.log("Err:" + err);
+            res.send(result);
+        });
+    };
 };
 
 module.exports = Trophies;
