@@ -65,6 +65,19 @@ var _insertToTask2Table = function(row, queryNumber, callback){
     });
 };
 
+var _insertToTrophyTable = function(row, queryNumber, callback){
+    var sql = "INSERT INTO Trophies (Name) VALUES ('" + row.Name + "')";
+    mysqlConnection.query(sql, function(err, result){
+      if(err) {
+       console.log("error", err);
+       } else {
+           console.log("result", result);
+            callback(queryNumber);
+       }
+
+    });
+};
+
 var DataRowConstructor = function() {
     return {
         FirstName : null,
@@ -78,7 +91,7 @@ var DataRowConstructor = function() {
     };
 };
 
-var GoalRowConstructor = function(){
+var GoalRowConstructor = function() {
     return {
         fkUser : null,
         Name : null,
@@ -96,7 +109,7 @@ var GoalRowConstructor = function(){
     };
 };
 
-var TaskRowConstructor = function(){
+var TaskRowConstructor = function() {
   return {
       fkUser : null,
       fkGoal : null,
@@ -107,6 +120,13 @@ var TaskRowConstructor = function(){
       Name : null,
       LastUpdated: null
   };
+};
+
+var TrophyRowConstructor = function() {
+    return {
+        Name : null,
+        TrophyUrl : null
+    };
 };
 
 var _generateRandomDateTime = function() {
@@ -210,10 +230,22 @@ var _createTaskOfTasks = function(){
         row.LastUpdated = _generateRandomDateTime();
         _insertToTask2Table(row, i , function(queryNumber){
             if(queryNumber >= 299){
-                process.exit();
+                _createTrophies();
             }
         });
     }
 };
+
+var _createTrophies = function() {
+    for(var i = 0; i < 50; i++) {
+        var row = new TrophyRowConstructor();
+        row.Name = Faker.random.bs_buzz();
+        _insertToTrophyTable(row, i , function(queryNumber) {
+            if(queryNumber >= 50) {
+                process.exit();
+            }
+        });
+    }
+}
 
 _updateDB();
