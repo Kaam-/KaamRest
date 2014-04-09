@@ -64,7 +64,7 @@ var DataRowConstructor = function() {
     };
 };
 
-var GoalRowConstructor = function(){
+var GoalRowConstructor = function() {
     return {
         fkUser : null,
         Name : null,
@@ -82,7 +82,7 @@ var GoalRowConstructor = function(){
     };
 };
 
-var TaskRowConstructor = function(){
+var TaskRowConstructor = function() {
   return {
       fkUser : null,
       fkGoal : null,
@@ -93,6 +93,14 @@ var TaskRowConstructor = function(){
       Name : null,
       LastUpdated: null
   };
+};
+
+var TrophyRowConstructor = function() {
+    return {
+        pkTrophy : null,
+        Name : null,
+        TrophyUrl : null
+    };
 };
 
 var _generateRandomDateTime = function() {
@@ -181,6 +189,9 @@ var _createTasks = function(){
     }
 };
 
-//_updateDB();
-//_createGoals();
+/*_updateDB();
+_createGoals();
 _createTasks();
+*/
+
+_createTrophies();
