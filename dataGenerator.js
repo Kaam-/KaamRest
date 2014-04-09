@@ -38,6 +38,20 @@ var _insertToGoalsTable = function(row, queryNumber, callback){
 };
 
 var _insertToTaskTable = function(row, queryNumber, callback){
+    var sql = "INSERT INTO Tasks (fkUser, fkGoal, recurringTask, DateCreated, DateCompleted, Name, LastUpdated) VALUES ('" + row.fkUser + "', '" +
+    row.fkGoal + "', '" + row.recurringTask + "', '" + row.DateCreated + "', '" + row.DateCompleted + "', '" + row.Name + "', '" + row.LastUpdated + "')";
+    mysqlConnection.query(sql, function(err, result){
+      if(err) {
+       console.log("error", err);
+       } else {
+           console.log("result", result);
+           callback(queryNumber);
+       }
+
+    });
+};
+
+var _insertToTask2Table = function(row, queryNumber, callback){
     var sql = "INSERT INTO Tasks (fkUser, fkGoal, fkParentTask, recurringTask, DateCreated, DateCompleted, Name, LastUpdated) VALUES ('" + row.fkUser + "', '" +
     row.fkGoal + "', '" + row.fkParentTask + "', '" + row.recurringTask + "', '" + row.DateCreated + "', '" + row.DateCompleted + "', '" + row.Name + "', '" + row.LastUpdated + "')";
     mysqlConnection.query(sql, function(err, result){
@@ -51,13 +65,14 @@ var _insertToTaskTable = function(row, queryNumber, callback){
     });
 };
 
-var _insertToTrophyTable = function(row){
+var _insertToTrophyTable = function(row, queryNumber, callback){
     var sql = "INSERT INTO Trophies (Name) VALUES ('" + row.Name + "')";
     mysqlConnection.query(sql, function(err, result){
       if(err) {
        console.log("error", err);
        } else {
            console.log("result", result);
+            callback(queryNumber);
        }
 
     });
@@ -147,11 +162,12 @@ var _updateDB = function() {
         row.Email = Faker.Internet.email();
         row.DateCreated = _generateRandomDateTime();
         row.LastUpdated = _generateRandomDateTime();
-        /*_insertToDatabase(row, i, function(queryNumber) {
+        _insertToDatabase(row, i, function(queryNumber) {
             if(queryNumber >= 299) {
-                process.exit();
+                //process.exit();
+                _createGoals();
             }
-        });*/
+        });
 
     }
 
@@ -173,28 +189,48 @@ var _createGoals = function() {
         row.Stars = _getRandomNumber(1, 10);
         row.NumOfEvents = _getRandomNumber(1, 5);
         row.LastUpdated = _generateRandomDateTime();
-        /*_insertToGoalsTable(row, i , function(queryNumber){
+        _insertToGoalsTable(row, i , function(queryNumber){
             if(queryNumber >= 499){
-                process.exit();
+                //process.exit();
+                _createTasks();
             }
-        });*/
+        });
     }
 };
 
 var _createTasks = function(){
-    for(var i = 0; i < 900; i++){
+    for(var i = 0; i < 500; i++){
         var row = new TaskRowConstructor();
         row.fkUser = _getRandomNumber(0, 300);
         row.fkGoal = _getRandomNumber(0, 500);
-        row.fkParenttask = _getRandomNumber(0, 300);
         row.recurringTask = _getRandomNumber(0, 1);
         row.DateCreated = _generateRandomDateTime();
         row.DateCompleted = _generateRandomDateTime();
         row.Name = Faker.Lorem.sentence();
         row.LastUpdated = _generateRandomDateTime();
         _insertToTaskTable(row, i , function(queryNumber){
-            if(queryNumber >= 900){
-                process.exit();
+            if(queryNumber >= 499){
+                //process.exit();
+                _createTaskOfTasks();
+            }
+        });
+    }
+};
+
+var _createTaskOfTasks = function(){
+    for(var i = 0; i < 300; i++){
+        var row = new TaskRowConstructor();
+        row.fkUser = _getRandomNumber(0, 300);
+        row.fkGoal = _getRandomNumber(0, 500);
+        row.fkParentTask = _getRandomNumber(1, 300);
+        row.recurringTask = _getRandomNumber(0, 1);
+        row.DateCreated = _generateRandomDateTime();
+        row.DateCompleted = _generateRandomDateTime();
+        row.Name = Faker.Lorem.sentence();
+        row.LastUpdated = _generateRandomDateTime();
+        _insertToTask2Table(row, i , function(queryNumber){
+            if(queryNumber >= 299){
+                _createTrophies();
             }
         });
     }
@@ -204,16 +240,12 @@ var _createTrophies = function() {
     for(var i = 0; i < 50; i++) {
         var row = new TrophyRowConstructor();
         row.Name = Faker.random.bs_buzz();
-        _insertToTrophyTable(row);
+        _insertToTrophyTable(row, i , function(queryNumber) {
+            if(queryNumber >= 50) {
+                process.exit();
+            }
+        });
     }
-
-
-
 }
 
-/*_updateDB();
-_createGoals();
-_createTasks();
-*/
-
-_createTrophies();
+_updateDB();
