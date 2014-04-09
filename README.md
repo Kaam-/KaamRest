@@ -18,3 +18,7 @@ npm install
 ```
 npm start
 ```
+
+
+# TODO
+* Insert dummy data to TrophyToGoal
