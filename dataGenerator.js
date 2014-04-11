@@ -108,6 +108,21 @@ var _insertToComment2Table = function(row, queryNumber, callback){
     });
 };
 
+var _insertToNoteTable = function(row, queryNumber, callback){
+    var sql = "INSERT INTO Notes (fkUser, fkTask, NoteText, DateCreated, LastUpdated) VALUES ('"
+    + row.fkUser + "', '" + row.fkTask + "', '" + row.NoteText + "', '"
+    + row.DateCreated + "', '" + row.LastUpdated + "')";
+    mysqlConnection.query(sql, function(err, result){
+      if(err) {
+       console.log("error", err);
+       } else {
+           console.log("result", result);
+            callback(queryNumber);
+       }
+
+    });
+};
+
 var DataRowConstructor = function() {
     return {
         FirstName : null,
@@ -167,6 +182,16 @@ var TrophyRowConstructor = function() {
     return {
         Name : null,
         TrophyUrl : null
+    };
+};
+
+var NoteRowConstructor = function() {
+    return {
+        fkUser : null,
+        fkTask : null,
+        NoteText : null,
+        DateCreated : null,
+        LastUpdated : null
     };
 };
 
@@ -310,6 +335,22 @@ var _createCommentsOfComments = function() {
         row.DateCreated = _generateRandomDateTime();
         row.LastUpdated = _generateRandomDateTime();
         _insertToComment2Table(row, i , function(queryNumber) {
+            if(queryNumber >= 499) {
+                _createNotes();
+            }
+        });
+    }
+};
+
+var _createNotes = function() {
+    for(var i = 0; i < 500; i++){
+        var row = new CommentRowConstructor();
+        row.fkUser = _getRandomNumber(1, 500);
+        row.fkTask = _getRandomNumber(1, 499);
+        row.NoteText = Faker.Lorem.sentence();
+        row.DateCreated = _generateRandomDateTime();
+        row.LastUpdated = _generateRandomDateTime();
+        _insertToNoteTable(row, i , function(queryNumber) {
             if(queryNumber >= 499) {
                 process.exit();
             }

@@ -9,8 +9,9 @@ var express = require('express'),
     tasksConstructor = require('./routes/tasks'),
     tasks = new tasksConstructor(),
     commentsConstructor = require('./routes/comments'),
-    comments = new commentsConstructor();
-
+    comments = new commentsConstructor(),
+    notesConstructor = require('./routes/notes'),
+    notes = new notesConstructor();
 
 app.get('/user/all', users.getAll);
 app.get('/user/:id', users.getById);
@@ -28,5 +29,7 @@ app.get('/task/:id', tasks.getById);
 app.get('/comments/all', comments.getAll);
 app.get('/comments/:id', comments.getById);
 
+app.get('/notes/all', notes.getAll);
+app.get('/notes/:id', notes.getById);
 
 app.listen(3000);
