@@ -7,7 +7,9 @@ var express = require('express'),
     trophiesConstructor = require('./routes/trophies'),
     trophies = new trophiesConstructor(),
     tasksConstructor = require('./routes/tasks'),
-    tasks = new tasksConstructor();
+    tasks = new tasksConstructor(),
+    commentsConstructor = require('./routes/comments'),
+    comments = new commentsConstructor();
 
 
 app.get('/user/all', users.getAll);
@@ -23,7 +25,8 @@ app.get('/trophies/goal/:id', trophies.getAllTrophiesForGoal);
 app.get('/task/user/:id', tasks.getAllByUser);
 app.get('/task/:id', tasks.getById);
 
-
+app.get('/comments/all', comments.getAll);
+app.get('/comments/:id', comments.getById);
 
 
 app.listen(3000);

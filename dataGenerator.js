@@ -78,6 +78,36 @@ var _insertToTrophyTable = function(row, queryNumber, callback){
     });
 };
 
+var _insertToCommentTable = function(row, queryNumber, callback){
+    var sql = "INSERT INTO Comments (fkUser, CommentText, ParentType, DateCreated, LastUpdated) VALUES ('"
+    + row.fkUser + "', '" + row.CommentText + "', '" + row.ParentType + "', '"
+    + row.DateCreated + "', '" + row.LastUpdated + "')";
+    mysqlConnection.query(sql, function(err, result){
+      if(err) {
+       console.log("error", err);
+       } else {
+           console.log("result", result);
+            callback(queryNumber);
+       }
+
+    });
+};
+
+var _insertToComment2Table = function(row, queryNumber, callback){
+    var sql = "INSERT INTO Comments (fkUser, fkParent, CommentText, ParentType, DateCreated, LastUpdated) VALUES ('"
+    + row.fkUser + "', '" + row.fkParent + "', '" + row.CommentText + "', '" + row.ParentType + "', '"
+    + row.DateCreated + "', '" + row.LastUpdated + "')";
+    mysqlConnection.query(sql, function(err, result){
+      if(err) {
+       console.log("error", err);
+       } else {
+           console.log("result", result);
+            callback(queryNumber);
+       }
+
+    });
+};
+
 var DataRowConstructor = function() {
     return {
         FirstName : null,
@@ -122,6 +152,17 @@ var TaskRowConstructor = function() {
   };
 };
 
+var CommentRowConstructor = function() {
+    return {
+        fkUser : null,
+        fkParent : null,
+        CommentText : null,
+        ParentType : null,
+        DateCreated : null,
+        LastUpdated : null
+    };
+};
+
 var TrophyRowConstructor = function() {
     return {
         Name : null,
@@ -164,7 +205,6 @@ var _updateDB = function() {
         row.LastUpdated = _generateRandomDateTime();
         _insertToDatabase(row, i, function(queryNumber) {
             if(queryNumber >= 299) {
-                //process.exit();
                 _createGoals();
             }
         });
@@ -176,7 +216,7 @@ var _updateDB = function() {
 var _createGoals = function() {
     for(var i = 0; i < 500; i++){
         var row = new GoalRowConstructor();
-        row.fkUser = _getRandomNumber(0, 300);
+        row.fkUser = _getRandomNumber(1, 300);
         row.Name = Faker.Lorem.words();
         row.DateCreated = _generateRandomDateTime();
         row.EndDate = _generateRandomDateTime();
@@ -191,7 +231,6 @@ var _createGoals = function() {
         row.LastUpdated = _generateRandomDateTime();
         _insertToGoalsTable(row, i , function(queryNumber){
             if(queryNumber >= 499){
-                //process.exit();
                 _createTasks();
             }
         });
@@ -201,8 +240,8 @@ var _createGoals = function() {
 var _createTasks = function(){
     for(var i = 0; i < 500; i++){
         var row = new TaskRowConstructor();
-        row.fkUser = _getRandomNumber(0, 300);
-        row.fkGoal = _getRandomNumber(0, 500);
+        row.fkUser = _getRandomNumber(1, 300);
+        row.fkGoal = _getRandomNumber(1, 500);
         row.recurringTask = _getRandomNumber(0, 1);
         row.DateCreated = _generateRandomDateTime();
         row.DateCompleted = _generateRandomDateTime();
@@ -210,7 +249,6 @@ var _createTasks = function(){
         row.LastUpdated = _generateRandomDateTime();
         _insertToTaskTable(row, i , function(queryNumber){
             if(queryNumber >= 499){
-                //process.exit();
                 _createTaskOfTasks();
             }
         });
@@ -220,8 +258,8 @@ var _createTasks = function(){
 var _createTaskOfTasks = function(){
     for(var i = 0; i < 300; i++){
         var row = new TaskRowConstructor();
-        row.fkUser = _getRandomNumber(0, 300);
-        row.fkGoal = _getRandomNumber(0, 500);
+        row.fkUser = _getRandomNumber(1, 300);
+        row.fkGoal = _getRandomNumber(1, 500);
         row.fkParentTask = _getRandomNumber(1, 300);
         row.recurringTask = _getRandomNumber(0, 1);
         row.DateCreated = _generateRandomDateTime();
@@ -241,11 +279,42 @@ var _createTrophies = function() {
         var row = new TrophyRowConstructor();
         row.Name = Faker.random.bs_buzz();
         _insertToTrophyTable(row, i , function(queryNumber) {
-            if(queryNumber >= 50) {
+            if(queryNumber >= 49) {
+                _createComments();
+            }
+        });
+    }
+};
+
+var _createComments = function() {
+    for(var i = 0; i < 500; i++){
+        var row = new CommentRowConstructor();
+        row.fkUser = _getRandomNumber(1, 300);
+        row.CommentText = Faker.Lorem.sentence();
+        row.DateCreated = _generateRandomDateTime();
+        row.LastUpdated = _generateRandomDateTime();
+        _insertToCommentTable(row, i , function(queryNumber) {
+            if(queryNumber >= 499) {
+                _createCommentsOfComments();
+            }
+        });
+    }
+};
+
+var _createCommentsOfComments = function() {
+    for(var i = 0; i < 500; i++){
+        var row = new CommentRowConstructor();
+        row.fkUser = _getRandomNumber(1, 300);
+        row.fkParent = _getRandomNumber(1, 499);
+        row.CommentText = Faker.Lorem.sentence();
+        row.DateCreated = _generateRandomDateTime();
+        row.LastUpdated = _generateRandomDateTime();
+        _insertToComment2Table(row, i , function(queryNumber) {
+            if(queryNumber >= 499) {
                 process.exit();
             }
         });
     }
-}
+};
 
 _updateDB();
