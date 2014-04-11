@@ -78,6 +78,19 @@ var _insertToTrophyTable = function(row, queryNumber, callback){
     });
 };
 
+var _insertToStickerTable = function(row, queryNumber, callback){
+    var sql = "INSERT INTO Stickers (Name) VALUES ('" + row.Name + "')";
+    mysqlConnection.query(sql, function(err, result){
+      if(err) {
+       console.log("error", err);
+       } else {
+           console.log("result", result);
+            callback(queryNumber);
+       }
+
+    });
+};
+
 var _insertToCommentTable = function(row, queryNumber, callback){
     var sql = "INSERT INTO Comments (fkUser, CommentText, ParentType, DateCreated, LastUpdated) VALUES ('"
     + row.fkUser + "', '" + row.CommentText + "', '" + row.ParentType + "', '"
@@ -182,6 +195,13 @@ var TrophyRowConstructor = function() {
     return {
         Name : null,
         TrophyUrl : null
+    };
+};
+
+var StickerRowConstructor = function() {
+    return {
+        Name : null,
+        StickerUrl : null
     };
 };
 
@@ -344,7 +364,7 @@ var _createCommentsOfComments = function() {
 
 var _createNotes = function() {
     for(var i = 0; i < 500; i++){
-        var row = new CommentRowConstructor();
+        var row = new NoteRowConstructor();
         row.fkUser = _getRandomNumber(1, 500);
         row.fkTask = _getRandomNumber(1, 499);
         row.NoteText = Faker.Lorem.sentence();
@@ -352,6 +372,18 @@ var _createNotes = function() {
         row.LastUpdated = _generateRandomDateTime();
         _insertToNoteTable(row, i , function(queryNumber) {
             if(queryNumber >= 499) {
+                _createStickers();
+            }
+        });
+    }
+};
+
+var _createStickers = function() {
+    for(var i = 0; i < 50; i++) {
+        var row = new StickerRowConstructor();
+        row.Name = Faker.random.bs_buzz();
+        _insertToStickerTable(row, i , function(queryNumber) {
+            if(queryNumber >= 49) {
                 process.exit();
             }
         });

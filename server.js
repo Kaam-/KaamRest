@@ -12,6 +12,8 @@ var express = require('express'),
     comments = new commentsConstructor(),
     notesConstructor = require('./routes/notes'),
     notes = new notesConstructor();
+    stickersConstructor = require('./routes/stickers'),
+    stickers = new stickersConstructor();
 
 app.get('/user/all', users.getAll);
 app.get('/user/:id', users.getById);
@@ -29,7 +31,9 @@ app.get('/task/:id', tasks.getById);
 app.get('/comments/all', comments.getAll);
 app.get('/comments/:id', comments.getById);
 
-app.get('/notes/all', notes.getAll);
-app.get('/notes/:id', notes.getById);
+app.get('/note/user/:id', notes.getAllGoalsForUser);
+app.get('/note/:id', notes.getById);
+
+app.get('/sticker/all', stickers.getAll);
 
 app.listen(3000);
