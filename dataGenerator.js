@@ -136,6 +136,33 @@ var _insertToNoteTable = function(row, queryNumber, callback){
     });
 };
 
+var _insertToEventsTable = function(row, queryNumber, callback){
+    var sql = "INSERT INTO EVENT (fkComment, fkUser, fkPublisher, EventText, Publishertype, DateCreated) VALUES ('"
+        + row.fkComment + "', '" + row.fkUser + "', '" + row.fkPublisher + "', '" + row.EventText + "', '"
+        + row.Publishertype + "', '" + row.DateCreated + "')";
+    mysqlConnection.query(sql, function(err, result){
+      if(err) {
+       console.log("error", err);
+       } else {
+           console.log("result", result);
+            callback(queryNumber);
+       }
+    });
+};
+
+var _insertToTagsTable = function(row, queryNumber, callback){
+    var sql = "INSERT INTO TAGS (name) VALUES ('"
+        + row.name + "')";
+    mysqlConnection.query(sql, function(err, result){
+      if(err) {
+       console.log("error", err);
+       } else {
+           console.log("result", result);
+            callback(queryNumber);
+       }
+    });
+};
+
 var DataRowConstructor = function() {
     return {
         FirstName : null,
@@ -214,6 +241,23 @@ var NoteRowConstructor = function() {
         LastUpdated : null
     };
 };
+
+var EventRowConstructur = function() {
+    return {
+        fkComment : null,
+        fkUser : null,
+        fkPublisher : null,
+        EventText : null,
+        Publishertype : null,
+        DateCreated : null
+    }
+}
+
+var TagRowConstructur = function() {
+    return {
+        name : null
+    }
+}
 
 var _generateRandomDateTime = function() {
     var year = _getRandomNumber(2010, 2014);
@@ -384,10 +428,41 @@ var _createStickers = function() {
         row.Name = Faker.random.bs_buzz();
         _insertToStickerTable(row, i , function(queryNumber) {
             if(queryNumber >= 49) {
-                process.exit();
+                _createEvents();
             }
         });
     }
 };
+
+var _createEvents = function() {
+    for(var i = 0; i < 1000; i++)
+    {
+        var row = new EventRowConstructur();
+        row.fkComment = _getRandomNumber(1, 500);
+        row.fkUser = _getRandomNumber(1, 2000);
+        row.fkPublisher = _getRandomNumber(1, 500);
+        row.EventText = Faker.Lorem.sentence();
+        row.Publishertype = Faker.random.bs_buzz();
+        row.DateCreated = _generateRandomDateTime();
+        _insertToEventsTable(row, i , function(queryNumber) {
+            if(queryNumber >= 999) {
+                _createTags();
+            }
+        });
+    }
+}
+
+var _createTags = function() {
+    for(var i = 0; i < 200; i++)
+    {
+        var row = new TagRowConstructur();
+        row.name = Faker.random.bs_buzz();
+        _insertToTagsTable(row, i , function(queryNumber) {
+            if(queryNumber >= 199) {
+                process.exit();
+            }
+        });
+    }
+}
 
 _updateDB();
